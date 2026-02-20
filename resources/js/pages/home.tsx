@@ -51,22 +51,22 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <DownloadButton
-                href="https://app.box.com/s/q1sp3jlk1w5iyvnp19heuv12a4ept9d2"
+                href="https://app.box.com/s/s0f6mnnsg3rjaadtfh0ep2qsbxoo90ci"
                 icon={<Monitor className="h-4 w-4" />}
                 title="Windows"
               />
               <DownloadButton
-                href="https://app.box.com/s/drlkdlqonyg5b2qmaslzw8a8nclxv1jg"
+                href="https://app.box.com/s/gvclexkqlwbl19ss0965t79mswcd69hj"
                 icon={<Monitor className="h-4 w-4" />}
                 title="Mac"
               />
               <DownloadButton
-                href="https://app.box.com/s/yst1b6ofwuo285njpql9yba4cg0p6yy3"
+                href="https://app.box.com/s/i4lgkpfhmtl2o2zeksdlglqtv3da544o"
                 icon={<Monitor className="h-4 w-4" />}
                 title="Linux (DEB) AMD64"
               />
               <DownloadButton
-                href="https://app.box.com/s/tznfqangt3p3j1i46n5uccformhcbgun"
+                href="https://app.box.com/s/nru3rndrx1qf79rfz57ov6euorrftfes"
                 icon={<Monitor className="h-4 w-4" />}
                 title="Linux (DEB) ARM64"
               />
