@@ -56,7 +56,7 @@ export default function Home() {
                 title="Windows"
               />
               <DownloadButton
-                href="https://app.box.com/s/mpzq5ur95wmgjiaolqlxo2ilw9evyg8n"
+                href="https://app.box.com/s/drlkdlqonyg5b2qmaslzw8a8nclxv1jg"
                 icon={<Monitor className="h-4 w-4" />}
                 title="Mac"
               />
