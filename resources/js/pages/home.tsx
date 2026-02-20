@@ -1,4 +1,4 @@
-import { Download, BookOpen, Smartphone } from "lucide-react"
+import { Download, BookOpen, Smartphone, Monitor } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import HomeLayout from "@/layouts/home-layout"
 
@@ -44,6 +44,35 @@ export default function Home() {
               title="Kindle Dictionary"
             />
           </div>
+
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+              Desktop (Offline)
+            </p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <DownloadButton
+                href="https://app.box.com/s/q1sp3jlk1w5iyvnp19heuv12a4ept9d2"
+                icon={<Monitor className="h-4 w-4" />}
+                title="Windows"
+              />
+              <DownloadButton
+                href="https://app.box.com/s/mpzq5ur95wmgjiaolqlxo2ilw9evyg8n"
+                icon={<Monitor className="h-4 w-4" />}
+                title="Mac"
+              />
+              <DownloadButton
+                href="https://app.box.com/s/yst1b6ofwuo285njpql9yba4cg0p6yy3"
+                icon={<Monitor className="h-4 w-4" />}
+                title="Linux (DEB) AMD64"
+              />
+              <DownloadButton
+                href="https://app.box.com/s/tznfqangt3p3j1i46n5uccformhcbgun"
+                icon={<Monitor className="h-4 w-4" />}
+                title="Linux (DEB) ARM64"
+              />
+            </div>
+          </div>
+
         </div>
       </div>
     </HomeLayout>
