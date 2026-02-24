@@ -65,11 +65,26 @@ export default function Home() {
                 icon={<Monitor className="h-4 w-4" />}
                 title="Linux (DEB) AMD64"
               />
+
+              <DownloadButton
+                href="https://app.box.com/s/nl8fkze3vgrkj4xe887x8120kodv4wbh"
+                icon={<Monitor className="h-4 w-4" />}
+                title="Linux (AppImage) AMD64"
+              />
+
               <DownloadButton
                 href="https://app.box.com/s/nru3rndrx1qf79rfz57ov6euorrftfes"
                 icon={<Monitor className="h-4 w-4" />}
                 title="Linux (DEB) ARM64"
               />
+
+              <DownloadButton
+                href="https://app.box.com/s/bu8yv9dr8iibp5cfou1omuivfz4k9mq0"
+                icon={<Monitor className="h-4 w-4" />}
+                title="Linux (AppImage) ARM64"
+              />
+
+              
             </div>
           </div>
 
