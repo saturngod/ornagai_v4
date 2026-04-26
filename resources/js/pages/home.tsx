@@ -1,4 +1,5 @@
 import { Download, BookOpen, Smartphone, Monitor } from "lucide-react"
+import { Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import HomeLayout from "@/layouts/home-layout"
 
@@ -42,6 +43,11 @@ export default function Home() {
               href="https://app.box.com/s/hgqiq6m284v4axpxj1zti1ivnh3obqsl"
               icon={<Smartphone className="h-4 w-4" />}
               title="Kindle Dictionary"
+            />
+            <DownloadButton
+              href="https://play.google.com/store/apps/details?id=com.comquas.ornagai"
+              icon={<Play className="h-4 w-4" />}
+              title="Android"
             />
           </div>
 
