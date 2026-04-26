@@ -12,6 +12,9 @@ interface WordData {
     ipa?: string
     state?: string
     def: string
+    voice?: string
+    uk_voice_url?: string | null
+    us_voice_url?: string | null
     examples?: WordDataExample[]
 }
 
@@ -40,7 +43,7 @@ interface SearchProps {
     myWords?: MyanmarWord[]
 }
 
-const WordDefinition = ({ data }: { data: WordData }) => (
+const WordDefinition = ({ data, word, isEnglish }: { data: WordData; word: string; isEnglish: boolean }) => (
     <div className="border-l-2 border-blue-400 pl-4 space-y-3">
         <div className="flex items-center gap-3 flex-wrap">
             {data.ipa && (
@@ -52,6 +55,9 @@ const WordDefinition = ({ data }: { data: WordData }) => (
                 <span className="text-xs px-2 py-1 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 rounded-md border border-blue-200 dark:border-blue-800">
                     {data.state}
                 </span>
+            )}
+            {isEnglish && (
+                <DualVoiceButtons text={word} ukVoiceUrl={data.uk_voice_url} usVoiceUrl={data.us_voice_url} />
             )}
         </div>
         
@@ -109,22 +115,17 @@ const WordCard = ({ word, type = "english" }: { word: EnglishWord | MyanmarWord;
     
     return (
         <article className="bg-white dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700/50 p-6 hover:border-gray-200 dark:hover:border-gray-600 transition-colors">
-            <header className="flex items-start justify-between mb-6">
+            <header className="mb-6">
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 break-words">
                     {word.word}
                 </h2>
-                {isEnglish && (
-                    <div className="ml-4 flex-shrink-0">
-                        <DualVoiceButtons text={word.word} />
-                    </div>
-                )}
             </header>
             
             {wordData?.length ? (
                 <div className="space-y-6">
-                    {wordData.map(data => 
+                    {wordData.map(data =>
                         isEnglish ? (
-                            <WordDefinition key={data.id} data={data as WordData} />
+                            <WordDefinition key={data.id} data={data as WordData} word={word.word} isEnglish={isEnglish} />
                         ) : (
                             <MyanmarDefinition key={data.id} data={data as MyanmarWordData} />
                         )

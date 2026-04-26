@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class EnglishWordData extends Model
 {
@@ -10,8 +11,11 @@ class EnglishWordData extends Model
         'english_word_id',
         'ipa',
         'state',
-        'def'
+        'def',
+        'voice'
     ];
+
+    protected $appends = ['uk_voice_url', 'us_voice_url'];
 
     /**
      * Get the English word that this data belongs to.
@@ -27,5 +31,23 @@ class EnglishWordData extends Model
     public function examples()
     {
         return $this->hasMany(EnglishWordDataExample::class);
+    }
+
+    public function getUkVoiceUrlAttribute(): ?string
+    {
+        if (!$this->voice) {
+            return null;
+        }
+
+        return Storage::disk('s3')->temporaryUrl("uk/{$this->voice}.ogg", now()->addMinutes(5));
+    }
+
+    public function getUsVoiceUrlAttribute(): ?string
+    {
+        if (!$this->voice) {
+            return null;
+        }
+
+        return Storage::disk('s3')->temporaryUrl("us/{$this->voice}.ogg", now()->addMinutes(5));
     }
 }
