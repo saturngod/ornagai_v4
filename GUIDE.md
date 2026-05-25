@@ -181,6 +181,16 @@ docker/supervisor/supervisord.conf
 
 The included `.dockerignore` keeps local `.env`, `vendor`, `node_modules`, logs, tests, and generated dictionary objects out of the Docker build context.
 
+The Composer build stage uses `php:8.4-cli` and installs required PHP extensions before running `composer install`, including:
+
+```text
+intl
+mbstring
+pdo_mysql
+simplexml
+zip
+```
+
 At runtime, Laravel reads database settings from the environment:
 
 ```dotenv
@@ -436,6 +446,12 @@ If Vite assets are missing:
 
 - Confirm `npm run build` runs during the Docker build.
 - Confirm `public/build` exists in the final image.
+
+If Docker build fails during `composer install`:
+
+- Check the full Dokploy build log above the final error line.
+- Most failures here are missing PHP extensions or network/package download failures.
+- This Dockerfile installs the PHP extensions required by the current `composer.lock`; after changing Composer packages, rebuild and check the full log again.
 
 If `/up` fails:
 

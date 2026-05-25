@@ -1,7 +1,25 @@
 # syntax=docker/dockerfile:1
 
-FROM composer:2 AS vendor
+FROM php:8.4-cli AS vendor
 WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        git \
+        libicu-dev \
+        libonig-dev \
+        libxml2-dev \
+        libzip-dev \
+        unzip \
+    && docker-php-ext-install \
+        intl \
+        mbstring \
+        pdo_mysql \
+        simplexml \
+        zip \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY composer.json composer.lock ./
 RUN composer install \
@@ -35,6 +53,7 @@ RUN apt-get update \
         curl \
         libicu-dev \
         libonig-dev \
+        libxml2-dev \
         libzip-dev \
         nginx \
         supervisor \
@@ -44,6 +63,7 @@ RUN apt-get update \
         mbstring \
         opcache \
         pdo_mysql \
+        simplexml \
         zip \
     && rm -f /etc/nginx/sites-enabled/default \
     && mkdir -p /run/nginx /var/log/supervisor \
