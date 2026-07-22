@@ -12,6 +12,7 @@ interface WordDataExample {
 interface WordData {
     id: number;
     ipa?: string;
+    ipa_mm?: string;
     state?: string;
     def: string;
     voice?: string;
@@ -50,6 +51,7 @@ const WordDefinition = ({ data, word, isEnglish }: { data: WordData; word: strin
         <div className="flex items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-3">
                 {data.ipa && <span className="font-mono text-sm tracking-wide text-gray-500 dark:text-gray-400">/{data.ipa}/</span>}
+                {data.ipa_mm && <span className="text-sm text-gray-500 dark:text-gray-400">/{data.ipa_mm}/</span>}
                 {data.state && (
                     <Badge
                         variant="secondary"

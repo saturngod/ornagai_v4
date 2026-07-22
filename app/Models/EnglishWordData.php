@@ -10,6 +10,7 @@ class EnglishWordData extends Model
     protected $fillable = [
         'english_word_id',
         'ipa',
+        'ipa_mm',
         'state',
         'def',
         'voice'
