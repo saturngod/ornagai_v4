@@ -92,6 +92,10 @@ To create the final Kindle dictionary:
 2. Copy generated HTML files to this directory
 3. Follow Kindle dictionary packaging instructions
 
+```
+"/Applications/Kindle Previewer 3.app/Contents/lib/fc/bin/kindlegen" -c0 dict.opf
+```
+
 ## 🗂️ Project Structure
 
 ```
