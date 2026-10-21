@@ -49,6 +49,9 @@ return [
 
     'encrypt' => env('SESSION_ENCRYPT', false),
 
+    // Preserve existing sessions when upgrading from Laravel 12.
+    'serialization' => 'php',
+
     /*
     |--------------------------------------------------------------------------
     | Session File Location

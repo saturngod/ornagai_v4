@@ -4,7 +4,7 @@ English to Myanmar / Myanmar to English bilingual dictionary application built w
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![PHP](https://img.shields.io/badge/PHP-8.5.12-blue.svg)
-![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)
+![Laravel](https://img.shields.io/badge/Laravel-13.x-red.svg)
 ![React](https://img.shields.io/badge/React-18.x-blue.svg)
 
 ## ⚠️ Source Code Only
@@ -151,9 +151,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Docker PHP version
 
-The Docker build starts from the published `php:8.5.11-fpm-bookworm` image and
-compiles PHP 8.5.12 from the official source archive, verifying its SHA-256 checksum.
-Both dependency installation and the application runtime use the upgraded PHP.
-The build also replaces the source archive used by `docker-php-ext-install` and
-checks the installed PHP version and FPM configuration. This adds compilation
-time to the first build; Docker caches the PHP build for subsequent builds.
+The Docker build uses `saturngod/php-laravel:8.5.12` for both dependency
+installation and the application runtime. The image includes PHP-FPM, Composer,
+and the required PHP extensions. PHP is not compiled during the application build.
+Production PHP settings are loaded from `/opt/php/etc/conf.d/production.ini`.
+
+```bash
+docker build --pull -t ornagai .
+```
+
+## Laravel 13 upgrade
+
+The application uses Laravel 13 with Tinker 3 and Pest 4. The lock file pins the
+resolved dependency versions; deploy with `composer install` rather than update.
+Session serialization stays on `php` to preserve existing sessions. Cache object
+unserialization is disabled; explicitly allow classes if object caching is added.
