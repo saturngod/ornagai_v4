@@ -12,20 +12,44 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
         $PHPIZE_DEPS libargon2-dev libcurl4-openssl-dev libonig-dev \
-        libreadline-dev libsodium-dev libsqlite3-dev libssl-dev libxml2-dev zlib1g-dev; \
+        libreadline-dev libsodium-dev libsqlite3-dev libssl-dev libxml2-dev zlib1g-dev
+
+RUN set -eux; \
     docker-php-source delete; \
     curl -fsSL --retry 3 "$PHP_URL" -o /usr/src/php.tar.xz; \
     echo "$PHP_SHA256  /usr/src/php.tar.xz" | sha256sum -c -; \
-    docker-php-source extract; \
-    cd /usr/src/php; \
+    docker-php-source extract
+
+WORKDIR /usr/src/php
+# Match the official FPM build explicitly instead of replaying shell-quoted options.
+RUN set -eux; \
     export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS"; \
-    configureOptions="$(php-config --configure-options)"; \
-    eval "./configure $configureOptions"; \
-    make -j "$(nproc)"; \
-    make install; \
-    cd /; \
+    ./configure \
+        --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
+        --sysconfdir=/usr/local/etc \
+        --with-config-file-path="$PHP_INI_DIR" \
+        --with-config-file-scan-dir="$PHP_INI_DIR/conf.d" \
+        --enable-option-checking=fatal \
+        --with-mhash --with-pic --enable-mbstring --enable-mysqlnd \
+        --with-password-argon2 --with-sodium=shared \
+        --with-pdo-sqlite=/usr --with-sqlite3=/usr \
+        --with-curl --with-iconv --with-openssl --with-readline --with-zlib \
+        --disable-phpdbg --with-pear \
+        --with-libdir="lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)" \
+        --disable-cgi --enable-fpm \
+        --with-fpm-user=www-data --with-fpm-group=www-data \
+    || { cat config.log; exit 1; }
+
+# Keep memory usage predictable on small deployment builders.
+ARG PHP_BUILD_JOBS=2
+RUN make -j "$PHP_BUILD_JOBS"
+RUN make install
+
+WORKDIR /
+RUN set -eux; \
     docker-php-source delete; \
-    php -r 'exit(PHP_VERSION === "8.5.12" ? 0 : 1);'; \
+    php -v; \
+    php -r 'if (PHP_VERSION !== "8.5.12") { fwrite(STDERR, "Expected PHP 8.5.12, got ".PHP_VERSION.PHP_EOL); exit(1); }'; \
     php-fpm -v
 
 FROM php:8.5.11-fpm-bookworm AS php-base
