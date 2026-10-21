@@ -148,3 +148,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Dictionary data sources and contributors
 - Laravel and React communities
 - Myanmar language technology supporters
+
+## Docker PHP version
+
+The Docker build starts from the published `php:8.5.11-fpm-bookworm` image and
+compiles PHP 8.5.12 from the official source archive, verifying its SHA-256 checksum.
+Both dependency installation and the application runtime use the upgraded PHP.
+The build also replaces the source archive used by `docker-php-ext-install` and
+checks the installed PHP version and FPM configuration. This adds compilation
+time to the first build; Docker caches the PHP build for subsequent builds.

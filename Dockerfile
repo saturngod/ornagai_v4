@@ -1,6 +1,46 @@
 # syntax=docker/dockerfile:1
 
-FROM php:8.5.12-cli AS vendor
+# Bootstrap from a published image, then build the security release from source.
+FROM php:8.5.11-fpm-bookworm AS php-build
+
+ENV PHP_VERSION=8.5.12 \
+    PHP_URL=https://www.php.net/distributions/php-8.5.12.tar.xz \
+    PHP_ASC_URL=https://www.php.net/distributions/php-8.5.12.tar.xz.asc \
+    PHP_SHA256=08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        $PHPIZE_DEPS libargon2-dev libcurl4-openssl-dev libonig-dev \
+        libreadline-dev libsodium-dev libsqlite3-dev libssl-dev libxml2-dev zlib1g-dev; \
+    docker-php-source delete; \
+    curl -fsSL --retry 3 "$PHP_URL" -o /usr/src/php.tar.xz; \
+    echo "$PHP_SHA256  /usr/src/php.tar.xz" | sha256sum -c -; \
+    docker-php-source extract; \
+    cd /usr/src/php; \
+    export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS"; \
+    configureOptions="$(php-config --configure-options)"; \
+    eval "./configure $configureOptions"; \
+    make -j "$(nproc)"; \
+    make install; \
+    cd /; \
+    docker-php-source delete; \
+    php -r 'exit(PHP_VERSION === "8.5.12" ? 0 : 1);'; \
+    php-fpm -v
+
+FROM php:8.5.11-fpm-bookworm AS php-base
+
+ENV PHP_VERSION=8.5.12 \
+    PHP_URL=https://www.php.net/distributions/php-8.5.12.tar.xz \
+    PHP_ASC_URL=https://www.php.net/distributions/php-8.5.12.tar.xz.asc \
+    PHP_SHA256=08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209
+
+COPY --from=php-build /usr/local/ /usr/local/
+# Extension helpers must compile against the upgraded source, too.
+COPY --from=php-build /usr/src/php.tar.xz /usr/src/php.tar.xz
+RUN php -r 'exit(PHP_VERSION === "8.5.12" ? 0 : 1);' && php-fpm -t
+
+FROM php-base AS vendor
 WORKDIR /app
 
 RUN apt-get update \
@@ -44,7 +84,7 @@ COPY public ./public
 COPY vite.config.ts tsconfig.json components.json ./
 RUN npm run build
 
-FROM php:8.5.12-fpm AS runtime
+FROM php-base AS runtime
 
 WORKDIR /var/www/html
 
