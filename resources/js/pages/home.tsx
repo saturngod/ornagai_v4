@@ -65,6 +65,12 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <AppCard
+              href="https://apps.apple.com/us/app/ornagai-3/id6805141109"
+              icon={<Play className="w-5 h-5" />}
+              title="iOS"
+              description="Apple App Store"
+            />
+            <AppCard
               href="https://app.box.com/s/pjl69rypw62fmjyg7mdxr9hna0l0y0ng"
               icon={<BookOpen className="w-5 h-5" />}
               title="Mac Dictionary"
@@ -76,6 +82,7 @@ export default function Home() {
               title="Kindle"
               description="e-Reader format"
             />
+            
             <AppCard
               href="https://play.google.com/store/apps/details?id=com.comquas.ornagai"
               icon={<Play className="w-5 h-5" />}
@@ -103,7 +110,7 @@ export default function Home() {
 
               <PlatformCard title="macOS" icon={<Monitor className="w-4 h-4" />}>
                 <SmallDownloadLink
-                  href="https://app.box.com/s/gvclexkqlwbl19ss0965t79mswcd69hj"
+                  href="https://apps.apple.com/us/app/ornagai-3/id6805141109"
                   title="macOS App"
                 />
               </PlatformCard>
