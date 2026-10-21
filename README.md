@@ -3,7 +3,7 @@
 English to Myanmar / Myanmar to English bilingual dictionary application built with Laravel and React.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![PHP](https://img.shields.io/badge/PHP-8.3%2B-blue.svg)
+![PHP](https://img.shields.io/badge/PHP-8.5.12-blue.svg)
 ![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)
 ![React](https://img.shields.io/badge/React-18.x-blue.svg)
 
@@ -27,7 +27,7 @@ git clone https://github.com/your-username/ornagai.git
 cd ornagai
 ```
 
-2. Install PHP dependencies:
+2. Install PHP dependencies (PHP 8.5.12 or a newer PHP 8.5 patch release required):
 ```bash
 composer install
 ```

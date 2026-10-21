@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM php:8.4-cli AS vendor
+FROM php:8.5.12-cli AS vendor
 WORKDIR /app
 
 RUN apt-get update \
@@ -44,7 +44,7 @@ COPY public ./public
 COPY vite.config.ts tsconfig.json components.json ./
 RUN npm run build
 
-FROM php:8.4-fpm AS runtime
+FROM php:8.5.12-fpm AS runtime
 
 WORKDIR /var/www/html
 
@@ -61,7 +61,6 @@ RUN apt-get update \
     && docker-php-ext-install \
         intl \
         mbstring \
-        opcache \
         pdo_mysql \
         simplexml \
         zip \
