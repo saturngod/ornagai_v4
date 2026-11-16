@@ -93,7 +93,7 @@ export default function Home() {
               href="https://app.box.com/s/5jnhrd557bq9dihrrkrxvn8t4sq6yg6h"
               icon={<NotepadText className="w-5 h-5" />}
               title="Stardict"
-              description="CrossPoint/CrossInk Reader"
+              description="CrossPoint/CrossInk Reader/StarDict"
             />
             
           </div>
