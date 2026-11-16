@@ -1,4 +1,4 @@
-import { Download, BookOpen, Smartphone, Monitor, Play } from "lucide-react"
+import { Download, BookOpen, Smartphone, Monitor, Play, NotepadText } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import HomeLayout from "@/layouts/home-layout"
 
@@ -89,6 +89,13 @@ export default function Home() {
               title="Android"
               description="Google Play Store"
             />
+             <AppCard
+              href="https://app.box.com/s/5jnhrd557bq9dihrrkrxvn8t4sq6yg6h"
+              icon={<NotepadText className="w-5 h-5" />}
+              title="Stardict"
+              description="CrossPoint/CrossInk Reader"
+            />
+            
           </div>
 
           <div className="space-y-4">
