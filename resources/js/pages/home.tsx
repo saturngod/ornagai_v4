@@ -95,6 +95,12 @@ export default function Home() {
               title="Stardict"
               description="CrossPoint/CrossInk Reader/StarDict"
             />
+            <AppCard
+              href="https://app.box.com/s/fpt6cxsmw4309uqtn7r32n0icspnxkqf"
+              icon={<NotepadText className="w-5 h-5" />}
+              title="Stardict"
+              description="Kobo"
+            />
             
           </div>
 

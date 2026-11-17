@@ -1,0 +1,7 @@
+# Local toolchain and build output for the Kobo export
+.venv/
+bin/
+build/
+__pycache__/
+*.pyc
+.DS_Store
