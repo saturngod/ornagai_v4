@@ -77,7 +77,7 @@ export default function Home() {
               description="For Apple Books"
             />
             <AppCard
-              href="https://app.box.com/s/hgqiq6m284v4axpxj1zti1ivnh3obqsl"
+              href="https://app.box.com/s/wt6oefyi5j8a5c45vpl0l7omh3xvihkl"
               icon={<Smartphone className="w-5 h-5" />}
               title="Kindle"
               description="e-Reader format"
