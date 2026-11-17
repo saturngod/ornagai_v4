@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\EnglishWord;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
 class KindleDictionary extends Command
@@ -13,7 +13,7 @@ class KindleDictionary extends Command
      *
      * @var string
      */
-    protected $signature = 'app:kindle-dictionary {--output=dictionary.html : Output file name}';
+    protected $signature = 'app:kindle-dictionary {--output=dictionary.html : Output file name} {--format= : Text format (e.g. kindle for Kindle Myanmar rendering)}';
 
     /**
      * The console command description.
@@ -28,9 +28,14 @@ class KindleDictionary extends Command
     public function handle()
     {
         $outputFileName = $this->option('output');
+        $format = strtolower((string) $this->option('format'));
+        $useKindleRender = $format === 'kindle';
         $wordsPerFile = 3000;
         
         $this->info('Starting Kindle Dictionary generation...');
+        if ($useKindleRender) {
+            $this->info('Applying Kindle Myanmar rendering format...');
+        }
         
         // Get total count of words
         $totalWords = EnglishWord::count();
@@ -44,9 +49,9 @@ class KindleDictionary extends Command
         $fileIndex = 1;
         EnglishWord::with(['wordData.examples'])
             ->orderBy('word')
-            ->chunk($wordsPerFile, function ($words) use (&$fileIndex, $outputFileName, $totalFiles) {
+            ->chunk($wordsPerFile, function ($words) use (&$fileIndex, $outputFileName, $totalFiles, $useKindleRender) {
                 $fileName = $this->generateFileName($outputFileName, $fileIndex, $totalFiles);
-                $this->generateDictionaryFile($words, $fileName);
+                $this->generateDictionaryFile($words, $fileName, $useKindleRender);
                 
                 $this->info("Generated file {$fileIndex}: {$fileName}");
                 $fileIndex++;
@@ -74,13 +79,13 @@ class KindleDictionary extends Command
     /**
      * Generate dictionary HTML file for a chunk of words
      */
-    private function generateDictionaryFile($words, string $fileName): void
+    private function generateDictionaryFile($words, string $fileName, bool $useKindleRender = false): void
     {
         $html = $this->generateHTMLHeader();
         $html .= $this->generateBodyStart();
         
         foreach ($words as $word) {
-            $html .= $this->generateWordEntry($word);
+            $html .= $this->generateWordEntry($word, $useKindleRender);
         }
         
         $html .= $this->generateBodyEnd();
@@ -131,9 +136,6 @@ class KindleDictionary extends Command
           color: #555;
           margin-left: 1em;
       }
-    .definition {
-        font-family: "Noto Sans Myanmar","Myanmar MN", "Myanmar Sangam MN", "Pyidaungsu Book", sans-serif;
-    }
     </style>
   </head>
   <body>
@@ -152,7 +154,7 @@ class KindleDictionary extends Command
     /**
      * Generate word entry for Kindle dictionary format
      */
-    private function generateWordEntry(EnglishWord $word): string
+    private function generateWordEntry(EnglishWord $word, bool $useKindleRender = false): string
     {
         $html = '<idx:entry name="default" scriptable="yes" spell="yes">' . "\n";
         $html .= '  <h5><dt><idx:orth>' . htmlspecialchars($word->word, ENT_XML1, 'UTF-8') . '</idx:orth></dt></h5>' . "\n";
@@ -176,7 +178,7 @@ class KindleDictionary extends Command
             
             // Add definition
             if ($wordData->def) {
-                $definition = htmlspecialchars($wordData->def, ENT_XML1, 'UTF-8');
+                $definition = $this->formatText($wordData->def, $useKindleRender);
                 $html .= '    <span class="definition">';
                 $html .= '    ' . ($index + 1) . '. ' . $definition . "\n";
                 $html .= '    </span>' . "\n";
@@ -186,7 +188,7 @@ class KindleDictionary extends Command
             if ($wordData->examples && $wordData->examples->count() > 0) {
                 $html .= '<br/>' . "\n";
                 foreach ($wordData->examples as $example) {
-                    $exampleText = htmlspecialchars($example->example, ENT_XML1, 'UTF-8');
+                    $exampleText = $this->formatText((string) $example->example, $useKindleRender);
                     $html .= '    <div class="example">• ' . $exampleText . '</div>' . "\n";
                 }
             }
@@ -203,6 +205,34 @@ class KindleDictionary extends Command
         $html .= '<hr/>' . "\n";
         
         return $html;
+    }
+
+    /**
+     * Optionally reorder Myanmar text for Kindle rendering and escape for XML/HTML output.
+     */
+    private function formatText(string $text, bool $useKindleRender): string
+    {
+        if ($useKindleRender) {
+            $text = $this->kindleDictRender($text);
+        }
+
+        return htmlspecialchars($text, ENT_XML1, 'UTF-8');
+    }
+
+    /**
+     * Reorder Myanmar Unicode pre-base signs for Kindle's Unicode font renderer.
+     */
+    private function kindleDictRender(string $text): string
+    {
+        $rules = [
+            // 1. Move vowel sign E (\u{1031}) before consonant + optional subscript/kinzi + optional medials (\u{103B}-\u{103E})
+            '~([\x{1000}-\x{1021}\x{1023}-\x{102A}\x{103F}\x{1040}-\x{1049}])(\x{103A}?\x{1039}[\x{1000}-\x{1021}])?([\x{103B}-\x{103E}]*)\x{1031}~u' => "\u{1031}$1$2$3",
+
+            // 2. Move medial Ra (\u{103C}) before consonant + optional subscript/kinzi
+            '~([\x{1000}-\x{1021}\x{1023}-\x{102A}\x{103F}\x{1040}-\x{1049}])(\x{103A}?\x{1039}[\x{1000}-\x{1021}])?\x{103C}~u' => "\u{103C}$1$2",
+        ];
+
+        return preg_replace(array_keys($rules), array_values($rules), $text) ?? $text;
     }
     
     /**

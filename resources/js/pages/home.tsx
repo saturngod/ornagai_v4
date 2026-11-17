@@ -98,8 +98,8 @@ export default function Home() {
             <AppCard
               href="https://app.box.com/s/fpt6cxsmw4309uqtn7r32n0icspnxkqf"
               icon={<NotepadText className="w-5 h-5" />}
-              title="Stardict"
-              description="Kobo"
+              title="Kobo"
+              description="Dictionary for Kobo Reader"
             />
             
           </div>

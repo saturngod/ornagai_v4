@@ -81,7 +81,9 @@ make install
 Generate HTML format for Kindle:
 
 ```bash
-php artisan app:kindle-dictionary --output=dictionary.html
+php artisan app:kindle-dictionary --output=content.html
+# Or with Kindle rendering format:
+php artisan app:kindle-dictionary --format=kindle --output=content.html
 ```
 
 This generates multiple HTML files (`content_part_1.html` through `content_part_38.html`) in `storage/app/public/`. 
